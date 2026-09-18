@@ -407,35 +407,41 @@ public class AutonomousParking implements AutonomousParkingInterface {
  * Description
  * - Returns the current position of the car in the street as well as its (un)parked status.
  *    Inputs:
- *      - Queries for the car's current position.
- *      - Queries for the car's parking state.
+ *      - Access the car's position that is an attribute of the AutonomousParking class.
+ *      - Access the car's status with is an attribute of the AutonomousParking class.
  *
  *    Outputs:
- *      - Returns the car's current position and parking state.
+ *      - Returns the car's current position and parking status through the data type CarState.
  *
  * Pre-condition:
- * - 0 <= currCarPosition <= 500
+ * - Car's position must be within the defined range 0 <= currCarPosition <= 500
+ * - Parking status could be either PARKED or UNPARKED.
  *
  * Post-condition:
- * - 0 <= currCarPosition <= 500
+ * - Updated car's position (0 <= currCarPosition <= 500) and parking status (PARKED or UNPARKED)
  *
- * Test-cases:
- *  __________________________________________________________________
- * | Conditions/Actions                   |                           |
- * |--------------------------------------|---------------------------|
- * | c1: 0 <= currCarPosition <= 500      |   F   T   T   T   T   T   |
- * | c2: MoveForward method called?       |   -   T   -   -   -   -   |
- * | c3: MoveBackward method called?      |   -   -   T   -   -   -   |
- * | c4: currentParkingStatus = PARKED?   |   -   -   -   T   F   -   |
- * | c5: UnPark method called?            |   -   -   -   -   -   T   |
- * |--------------------------------------|---------------------------|
- * | a1: wrong input/state                |   X   -   -   -   -   -   |
- * | a2: currCarPosition += 1             |       X   -   -   -   -   |
- * | a3: currCarPosition -= 1             |       -   X   -   -   -   |
- * | a4: currentParkingStatus = PARKED    |               X   -   -   |
- * | a5: currentParkingStatus = UNPARKED  |       X   X       X   X   |
- * |______________________________________|___________________________|
+ * Test-cases: Combination of Decision Table + Boundary value conditions
+ * - Decision Table
+ *  _______________________________________________________________________________________
+ * | Conditions/Actions                               |   TC-WI-01   TC-WI-01   TC-WI-01   |
+ * |--------------------------------------------------|------------------------------------|
+ * | c1: Position valid? 0 <= currCarPosition <= 500  |     F           T          T       |
+ * | c2: Parking status = PARKED?                     |    -            T          F       |
+ * |--------------------------------------------------|------------------------------------|
+ * | a1: wrong input/state                            |    X            -          -       |
+ * | a2: currCarPosition                              |    -            X          X       |
+ * | a3: currentParkingStatus = PARKED                |    -            X          -       |
+ * | a4: currentParkingStatus = UNPARKED              |    -            -          X       |
+ * |__________________________________________________|____________________________________|
  *
+ * - Boundary value condition
+ *  _________________________________________________________
+ * | VARIABLE           |   TC-WI-01   TC-WI-01   TC-WI-01  |
+ * |--------------------|-----------------------------------|
+ * | currCarPosition    |     < 0        100         > 500  |
+ * |--------------------|-----------------------------------|
+ * | MethodState output |   Invalid     Valid     Invalid   |
+ * ---------------------------------------------------------|
 */
   public CarState WhereIs() {
     if (currCarPosition < 0 || currCarPosition > 500){
