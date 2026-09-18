@@ -156,8 +156,8 @@ public class AutonomousParking implements AutonomousParkingInterface {
    * |--------------------------------------------|----------|----------|----------|----------|
    * | c1: S1 average value                       |    < 0   |     0    |   200    |   > 200  |
    * | c2: S2 average value                       |    < 0   |     0    |   200    |   > 200  |
-   * | c3: Sensor state                           | Invalid  |  Valid   |  Valid   | Invalid  |
    * |--------------------------------------------|----------|----------|----------|----------|
+   * | a3: Sensor state                           | Invalid  |  Valid   |  Valid   | Invalid  |
    * | a1: IsEmpty() = -1                         |    X     |    -     |    -     |    X     |
    * | a2: IsEmpty() = Min(avg(S1), avg(S2))      |    -     |    X     |    X     |    -     |
    * |--------------------------------------------|----------|----------|----------|----------|
@@ -167,8 +167,8 @@ public class AutonomousParking implements AutonomousParkingInterface {
    * |--------------------------------------------|----------|----------|----------|
    * | c1: S1 average value                       |    < 80  |    80    |    > 80  |
    * | c2: S2 average value                       |    < 80  |    80    |    > 80  |
-   * | c3: Sensor state                           |  Invalid |  Valid   |  Invalid |
    * |--------------------------------------------|----------|----------|----------|
+   * | a3: Sensor state                           |  Invalid |  Valid   |  Invalid |
    * | a1: IsEmpty() = -1                         |    X     |    -     |    X     |
    * | a2: IsEmpty() = Min(avg(S1), avg(S2))      |    -     |    X     |    -     |
    * |--------------------------------------------|----------|----------|----------|
