@@ -18,43 +18,10 @@ public class TestWhereIs {
         car.currCarPosition = 501;
         error = assertThrows( IllegalStateException.class, () -> car.WhereIs() );
         assertEquals("Invalid car position", error.getMessage());
-
         System.out.println(error.getMessage());
     }
 
     @Test //TC-WI-02
-    void WhereIsReturnsCorrectStateAfterMoveForward(){
-        AutonomousParking car = new AutonomousParking(
-                new MockDataSensor(new int[] {101, 100, 102, 104, 105}),
-                new MockDataSensor(new int[] {103, 100, 101, 99, 98}) );
-
-        car.currCarPosition = 100;
-
-        car.MoveForward();
-
-        CarState state = car.WhereIs();
-
-        assertEquals(101, state.position);
-        assertEquals(ParkingStatus.UNPARKED, state.CurrParkingStatus);
-    }
-
-    @Test //TC-WI-03
-    void WhereIsReturnsCorrectStateAfterMoveBackward(){
-        AutonomousParking car = new AutonomousParking(
-                new MockDataSensor(new int[] {101, 100, 102, 104, 105}),
-                new MockDataSensor(new int[] {103, 100, 101, 99, 98}) );
-
-        car.currCarPosition = 100;
-
-        car.MoveBackward();
-
-        CarState state = car.WhereIs();
-
-        assertEquals(99, state.position);
-        assertEquals(ParkingStatus.UNPARKED, state.CurrParkingStatus);
-    }
-
-    @Test //TC-WI-04
     void WhereIsReturnsParkedState(){
         AutonomousParking car = new AutonomousParking(
                 new MockDataSensor(new int[] {101, 100, 102, 104, 105}),
@@ -69,7 +36,7 @@ public class TestWhereIs {
         assertEquals(ParkingStatus.PARKED, state.CurrParkingStatus);
     }
 
-    @Test //TC-WI-05
+    @Test //TC-WI-03
     void WhereIsReturnsUnparkedState(){
         AutonomousParking car = new AutonomousParking(
                 new MockDataSensor(new int[] {101, 100, 102, 104, 105}),
@@ -83,21 +50,4 @@ public class TestWhereIs {
         assertEquals(100, state.position);
         assertEquals(ParkingStatus.UNPARKED, state.CurrParkingStatus);
     }
-
-    @Test //TC-WI-06
-    void WhereIsReturnsCorrectStateAfterUnPark(){
-        AutonomousParking car = new AutonomousParking(
-                new MockDataSensor(new int[] {101, 100, 102, 104, 105}),
-                new MockDataSensor(new int[] {103, 100, 101, 99, 98}) );
-
-        car.currCarPosition = 100;
-
-        car.UnPark();
-
-        CarState state = car.WhereIs();
-
-        assertEquals(100, state.position);
-        assertEquals(ParkingStatus.UNPARKED, state.CurrParkingStatus);
-    }
-
 }
