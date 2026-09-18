@@ -323,8 +323,11 @@ public class AutonomousParking implements AutonomousParkingInterface {
    *  | Conditions/Actions                                      | TC_P_01  | TC_P_02  | TC_P_03 |
    *  |---------------------------------------------------------|----------|----------|---------|
    *  | c1: Already at valid parking stretch?                   |  T       |  F       | F       |
+   *  | (Car can park, no need to move forward)                 |          |          |         |
    *  | c2: Valid stretch found ahead?                          |  -       |  T       | F       |
+   *  | (Car will move forward and a guaranteed free parking spot before reaching the end)      |
    *  | c3: End of street reached?                              |  -       |  F       | T       |
+   *  | (Car will move forward but no free parking spot is found at the end of the stretch)     |
    *  |---------------------------------------------------------|----------|----------|---------|
    *  | a1: Move forward                                        |  -       |  X       | X       |
    *  | a2: Final status = PARKED                               |  X       |  X       | -       |
