@@ -1,12 +1,5 @@
 package autonomous_parking;
 
-interface IDataSensor {
-    public void Read();
-    public int[] GetDataSensor();
-    public boolean IsDataInRange();
-    public boolean FilterNoise();
-    public int CalculateData();
-}
 public class DataSensor implements IDataSensor {
 
     public static final int SENSOR_MIN_VALUE = 0;
