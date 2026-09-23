@@ -1,6 +1,6 @@
 package autonomous_parking;
 
-interface AutonomousParkingInterface {
+public interface AutonomousParkingInterface {
   public FreeSpots MoveForward();
   public int IsEmpty(); 
   public FreeSpots MoveBackward();
