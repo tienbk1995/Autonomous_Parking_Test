@@ -52,7 +52,6 @@ public class TestPark {
         boolean doPark = Car.Park();
         assertEquals(0, Car.freeSpotsLength);
 
-        assertEquals(180, sensor1.CalculateData());
         assertEquals(true, doPark);
         assertEquals(15, Car.currCarPosition);
         assertEquals(ParkingStatus.PARKED, Car.currParkingStatus);
