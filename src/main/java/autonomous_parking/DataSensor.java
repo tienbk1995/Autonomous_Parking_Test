@@ -18,10 +18,11 @@ public class DataSensor implements IDataSensor {
     }
 
     public int[] GetDataSensor() {
-        return sensorData;
+        Read();
+        return this.sensorData;
     }
 
-    public boolean IsDataInRange() {
+    public boolean IsDataInRange(int[] sensorData) {
         for (int i = 0; i < sensorData.length; i++) {
             if (sensorData[i] < SENSOR_MIN_VALUE || sensorData[i] > SENSOR_MAX_VALUE) {
                 return false;
@@ -30,7 +31,7 @@ public class DataSensor implements IDataSensor {
         return true;
     }
 
-    public boolean FilterNoise() {
+    public boolean FilterNoise(int[] sensorData) {
         // Implementation for filtering noise from sensor data
         int maxValData = sensorData[0];
         int minValData = sensorData[0];
@@ -51,7 +52,7 @@ public class DataSensor implements IDataSensor {
         return true;
     }
 
-    public int CalculateData() {
+    public int CalculateData(int[] sensorData) {
 
         int sum = 0;
 
