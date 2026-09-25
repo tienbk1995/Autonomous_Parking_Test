@@ -18,9 +18,9 @@ public class AutonomousParking implements AutonomousParkingInterface {
   private IActuator actuator;
 
   /* Parking Status */
-  private FreeSpots currNonBlockingParkingCarStatus;
-  private FreeSpots currCarStatus;
-  private FreeSpots currMostEfficientFreeSpot;
+  private FreeSpots currNonBlockingParkingCarStatus = new FreeSpots(0, 0);
+  private FreeSpots currCarStatus  = new FreeSpots(0, 0);
+  private FreeSpots currMostEfficientFreeSpot = new FreeSpots(0, 0);
 
   /* Set sensors and initial car/parking state */
   public AutonomousParking(IDataSensor sensor1, IDataSensor sensor2, IActuator actuator) {
