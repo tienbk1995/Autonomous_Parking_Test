@@ -355,14 +355,14 @@ public class AutonomousParking implements AutonomousParkingInterface {
         }
       }
       // Could not find any valid parking spot till the end of the road -> Raise exception and stop the program
-      else if ((currCarStatus.position == ROAD_MAX_STRETCH) && (currMostEfficientFreeSpot.freeSpotsLength <= PARKING_SPOT_LENGTH))
+      else if ((currCarStatus.position == ROAD_MAX_STRETCH) && (currMostEfficientFreeSpot.freeSpotsLength < PARKING_SPOT_LENGTH))
       {
         throw new IllegalStateException("Could not find any valid parking spot till then of the road");
       }
     }
 
     /*Keep moving backward until parking or reaching a lower road limit */
-    while ((currCarStatus.position > ROAD_MIN_STRETCH) || (currParkingStatus == ParkingStatus.UNPARKED))
+    while ((currCarStatus.position > ROAD_MIN_STRETCH) && (currParkingStatus == ParkingStatus.UNPARKED))
     {
       currCarStatus = MoveBackward();
       if (currMostEfficientFreeSpot.position == currCarStatus.position)
