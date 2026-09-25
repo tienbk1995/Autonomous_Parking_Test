@@ -9,20 +9,20 @@ public class AutonomousParking implements AutonomousParkingInterface {
   public static final int MIN_SENSOR_DETECTED_FREE_SPOT = 150;
   
   /* Car and parking lot status */
-  int currCarPosition;
   ParkingStatus currParkingStatus;
   int freeSpotsLength;
 
   /* Sensors */
   private IDataSensor sensor1;
   private IDataSensor sensor2;
+  private IActuator actuator;
 
   /* Set sensors and initial car/parking state */
-  public AutonomousParking(IDataSensor sensor1, IDataSensor sensor2) {
+  public AutonomousParking(IDataSensor sensor1, IDataSensor sensor2, IActuator actuator) {
     this.sensor1 = sensor1;
     this.sensor2 = sensor2;
+    this.actuator = actuator;
 
-    this.currCarPosition = 0;
     this.currParkingStatus = ParkingStatus.UNPARKED;
     this.freeSpotsLength = 0;
   }
@@ -71,9 +71,6 @@ public class AutonomousParking implements AutonomousParkingInterface {
   public FreeSpots MoveForward() {
     /* Check that the car position is still in range (0 to 499) */
     CarState carState = this.WhereIs();
-    if (carState.position < 0 || carState.position > 499) {
-      throw new IllegalStateException("Invalid car position");
-    }
 
     /* Check that the car is not parked */
     if (carState.CurrParkingStatus == ParkingStatus.PARKED) {
@@ -81,7 +78,7 @@ public class AutonomousParking implements AutonomousParkingInterface {
     }
 
     /* Increment car position */
-    currCarPosition += 1;
+    this.actuator.UpOneStep();
 
     /* Increment or reset the detected free space */
     int distanceToClosestObject = this.IsEmpty();
@@ -91,7 +88,7 @@ public class AutonomousParking implements AutonomousParkingInterface {
       freeSpotsLength = 0;
     }
 
-    return new FreeSpots(currCarPosition, freeSpotsLength);
+    return new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
   }
 
   /**
@@ -245,9 +242,7 @@ public class AutonomousParking implements AutonomousParkingInterface {
   public FreeSpots MoveBackward() {
     /* Check that the car position is still in range (1 to 500) */
     CarState carState = this.WhereIs();
-    if (carState.position < 1 || carState.position > 500) {
-      throw new IllegalStateException("Invalid car position");
-    }
+
 
     /* Check that the car is not parked */
     if (carState.CurrParkingStatus == ParkingStatus.PARKED) {
@@ -255,7 +250,7 @@ public class AutonomousParking implements AutonomousParkingInterface {
     }
 
     /* Decrement car position */
-    currCarPosition -= 1;
+    this.actuator.DownOneStep();
 
     /* Increment or reset the detected free space */
     int distanceToClosestObject = this.IsEmpty();
@@ -265,7 +260,7 @@ public class AutonomousParking implements AutonomousParkingInterface {
       freeSpotsLength = 0;
     }
 
-    return new FreeSpots(currCarPosition, freeSpotsLength);
+    return new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
   }
 
 /**
@@ -331,13 +326,13 @@ public class AutonomousParking implements AutonomousParkingInterface {
    */
   public boolean Park() {
     /*Keep moving forward until getting a free spot or reaching a upper road stretch limit */
-    while ((freeSpotsLength < 5) && (currCarPosition < 500))
+    while ((freeSpotsLength < 5) && (this.actuator.GetPosition() < 500))
     {
       MoveForward(); // move 1m ahead and update car status
     }
 
     /*Could not find a free spot at the end of upper road stretch limit */
-    if ((freeSpotsLength < 5) && (currCarPosition >= 500))
+    if ((freeSpotsLength < 5) && (this.actuator.GetPosition() >= 500))
     {
       currParkingStatus = ParkingStatus.UNPARKED;
       return false;
@@ -440,10 +435,10 @@ public class AutonomousParking implements AutonomousParkingInterface {
  * ---------------------------------------------------------|
 */
   public CarState WhereIs() {
-    if (currCarPosition < 0 || currCarPosition > 500){
+    if (this.actuator.GetPosition() < 0 || this.actuator.GetPosition() > 500){
       throw new IllegalStateException("Invalid car position");
     }
-    return new CarState(currCarPosition, currParkingStatus);
+    return new CarState(this.actuator.GetPosition() , currParkingStatus);
 
   }
 }

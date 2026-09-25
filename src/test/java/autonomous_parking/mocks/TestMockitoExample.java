@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import autonomous_parking.AutonomousParking;
 import autonomous_parking.AutonomousParkingInterface;
+import autonomous_parking.IActuator;
 import autonomous_parking.IDataSensor;
 
 class TestMockitoExample {
@@ -19,6 +20,8 @@ class TestMockitoExample {
         IDataSensor sensor1 = mock(IDataSensor.class);
 
         IDataSensor sensor2 = mock(IDataSensor.class);
+
+        IActuator actuator = mock(IActuator.class);
 
         int[] S1_Data = new int[] {200, 200, 200, 200, 200};
         int[] S2_Data = new int[] {180, 180, 180, 180, 180};
@@ -40,7 +43,7 @@ class TestMockitoExample {
 
         when(sensor2.CalculateData(S2_Data)).thenReturn(180);
 
-        AutonomousParkingInterface car =  new AutonomousParking(sensor1, sensor2);
+        AutonomousParkingInterface car =  new AutonomousParking(sensor1, sensor2, actuator);
 
         int distance = car.IsEmpty();
 
