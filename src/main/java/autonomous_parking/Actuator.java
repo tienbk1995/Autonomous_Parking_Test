@@ -25,9 +25,4 @@ public class Actuator implements IActuator {
     public int GetPosition() {
         return currCarPosition;
     }
-
-    public void SetPosition(int position) {
-        this.currCarPosition = position;
-    }
-
 }
