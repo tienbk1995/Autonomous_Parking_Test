@@ -17,6 +17,11 @@ public class AutonomousParking implements AutonomousParkingInterface {
   private IDataSensor sensor2;
   private IActuator actuator;
 
+  /* Parking Status */
+  private FreeSpots currNonBlockingParkingCarStatus;
+  private FreeSpots currCarStatus;
+  private FreeSpots currMostEfficientFreeSpot;
+
   /* Set sensors and initial car/parking state */
   public AutonomousParking(IDataSensor sensor1, IDataSensor sensor2, IActuator actuator) {
     this.sensor1 = sensor1;
@@ -85,6 +90,9 @@ public class AutonomousParking implements AutonomousParkingInterface {
     if (distanceToClosestObject >= MIN_SENSOR_DETECTED_FREE_SPOT) {
       freeSpotsLength += 1;
     } else {
+      /* Registering the current non-blocking parking spot */
+      currNonBlockingParkingCarStatus = new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
+      /* Resetting the freeSpotsLength due to obstruction */
       freeSpotsLength = 0;
     }
 
@@ -325,24 +333,51 @@ public class AutonomousParking implements AutonomousParkingInterface {
    * - (Refer to the Test_Specification.xlsm for more details)
    */
   public boolean Park() {
-    /*Keep moving forward until getting a free spot or reaching a upper road stretch limit */
-    while ((freeSpotsLength < 5) && (this.actuator.GetPosition() < 500))
+    /*Keep moving forward reaching a upper road limit */
+    while (currCarStatus.position < ROAD_MAX_STRETCH)
     {
-      MoveForward(); // move 1m ahead and update car status
+      currCarStatus = MoveForward(); // move 1m ahead and update car status
+
+      /* At the starting of the road, update the very first Most Efficient Free Spot */
+      if (currMostEfficientFreeSpot.freeSpotsLength == 0)
+      {
+        if (currNonBlockingParkingCarStatus.freeSpotsLength >= PARKING_SPOT_LENGTH)
+        {
+          currMostEfficientFreeSpot = currNonBlockingParkingCarStatus;
+        }
+      }
+      /* Keep scanning and registering the most effiecient parking spot */
+      if (currNonBlockingParkingCarStatus.freeSpotsLength >= PARKING_SPOT_LENGTH)
+      {
+        if (currNonBlockingParkingCarStatus.freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength)
+        {
+          currMostEfficientFreeSpot = currNonBlockingParkingCarStatus;
+        }
+      }
+      // Could not find any valid parking spot till the end of the road -> Raise exception and stop the program
+      else if ((currCarStatus.position == ROAD_MAX_STRETCH) && (currMostEfficientFreeSpot.freeSpotsLength <= PARKING_SPOT_LENGTH))
+      {
+        throw new IllegalStateException("Could not find any valid parking spot till then of the road");
+      }
     }
 
-    /*Could not find a free spot at the end of upper road stretch limit */
-    if ((freeSpotsLength < 5) && (this.actuator.GetPosition() >= 500))
+    /*Keep moving backward until parking or reaching a lower road limit */
+    while ((currCarStatus.position > ROAD_MIN_STRETCH) || (currParkingStatus == ParkingStatus.UNPARKED))
     {
-      currParkingStatus = ParkingStatus.UNPARKED;
-      return false;
+      currCarStatus = MoveBackward();
+      if (currMostEfficientFreeSpot.position == currCarStatus.position)
+      {
+        /* Park successfully */
+        currParkingStatus = ParkingStatus.PARKED;
+        /* Reset free spots length if car is parked successfully */
+        freeSpotsLength = 0;
+        /* Return  */
+        return true;
+      }
     }
-
-    /*Otherwise Park successfully */
-    currParkingStatus = ParkingStatus.PARKED;
-    /* Reset free spots length if car is parked successfully */
-    freeSpotsLength = 0;
-    return true;
+    /* Otherwise Return false */
+    currParkingStatus = ParkingStatus.UNPARKED;
+    return false;
   }
 
   /**
