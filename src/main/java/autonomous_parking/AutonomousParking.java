@@ -96,6 +96,11 @@ public class AutonomousParking implements AutonomousParkingInterface {
       freeSpotsLength = 0;
     }
 
+    /* Update the currNonBlockingParkingCarStatus for several last freeSpotsLength before reaching the end of road */
+    if (this.actuator.GetPosition() == ROAD_MAX_STRETCH && freeSpotsLength >= PARKING_SPOT_LENGTH) {
+      currNonBlockingParkingCarStatus = new FreeSpots(currCarStatus.position, freeSpotsLength);
+    }
+
     return new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
   }
 
@@ -341,23 +346,17 @@ public class AutonomousParking implements AutonomousParkingInterface {
       currCarStatus = MoveForward(); // move 1m ahead and update car status
 
       /* At the starting point, update the very first Most Efficient Free Spot */
-      if (currMostEfficientFreeSpot.freeSpotsLength == 0)
-      {
-        if (currNonBlockingParkingCarStatus.freeSpotsLength >= PARKING_SPOT_LENGTH)
-        {
-          currMostEfficientFreeSpot = currNonBlockingParkingCarStatus;
-        }
-      }
       /* Keep scanning and registering the most Efficient parking spot */
       if (currNonBlockingParkingCarStatus.freeSpotsLength >= PARKING_SPOT_LENGTH)
       {
-        if (currNonBlockingParkingCarStatus.freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength)
+        if ((currMostEfficientFreeSpot.freeSpotsLength == 0) || (currNonBlockingParkingCarStatus.freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength))
         {
           currMostEfficientFreeSpot = currNonBlockingParkingCarStatus;
         }
       }
+
       // Could not find any valid parking spot till the end of the road -> Raise exception and stop the program
-      else if ((currCarStatus.position == ROAD_MAX_STRETCH) && (currMostEfficientFreeSpot.freeSpotsLength < PARKING_SPOT_LENGTH))
+      if ((currCarStatus.position == ROAD_MAX_STRETCH) && (currMostEfficientFreeSpot.freeSpotsLength < PARKING_SPOT_LENGTH))
       {
         throw new IllegalStateException("Could not find any valid parking spot till then of the road");
       }
