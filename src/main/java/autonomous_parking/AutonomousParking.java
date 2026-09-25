@@ -333,12 +333,14 @@ public class AutonomousParking implements AutonomousParkingInterface {
    * - (Refer to the Test_Specification.xlsm for more details)
    */
   public boolean Park() {
+    /* Update the current car position on the road */
+    currCarStatus = new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
     /*Keep moving forward reaching a upper road limit */
     while (currCarStatus.position < ROAD_MAX_STRETCH)
     {
       currCarStatus = MoveForward(); // move 1m ahead and update car status
 
-      /* At the starting of the road, update the very first Most Efficient Free Spot */
+      /* At the starting point, update the very first Most Efficient Free Spot */
       if (currMostEfficientFreeSpot.freeSpotsLength == 0)
       {
         if (currNonBlockingParkingCarStatus.freeSpotsLength >= PARKING_SPOT_LENGTH)
@@ -346,7 +348,7 @@ public class AutonomousParking implements AutonomousParkingInterface {
           currMostEfficientFreeSpot = currNonBlockingParkingCarStatus;
         }
       }
-      /* Keep scanning and registering the most effiecient parking spot */
+      /* Keep scanning and registering the most Efficient parking spot */
       if (currNonBlockingParkingCarStatus.freeSpotsLength >= PARKING_SPOT_LENGTH)
       {
         if (currNonBlockingParkingCarStatus.freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength)
