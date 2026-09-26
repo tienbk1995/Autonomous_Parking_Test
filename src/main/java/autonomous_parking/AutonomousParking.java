@@ -74,7 +74,8 @@ public class AutonomousParking implements AutonomousParkingInterface {
   public FreeSpots MoveForward() {
     /* Check that the car position is still in range (0 to 499) */
     CarState carState = this.WhereIs();
-    int prevCarPosition;
+    /* Get prev car position */
+    int prevCarPosition = this.actuator.GetPosition();
 
     /* Check that the car is not parked */
     if (carState.CurrParkingStatus == ParkingStatus.PARKED) {
