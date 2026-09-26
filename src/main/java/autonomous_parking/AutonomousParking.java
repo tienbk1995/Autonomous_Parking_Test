@@ -18,8 +18,6 @@ public class AutonomousParking implements AutonomousParkingInterface {
   private IActuator actuator;
 
   /* Parking Status */
-  private FreeSpots currNonBlockingParkingCarStatus = new FreeSpots(0, 0);
-  private FreeSpots currCarStatus  = new FreeSpots(0, 0);
   private FreeSpots currMostEfficientFreeSpot = new FreeSpots(0, 0);
 
   /* Set sensors and initial car/parking state */
@@ -76,6 +74,7 @@ public class AutonomousParking implements AutonomousParkingInterface {
   public FreeSpots MoveForward() {
     /* Check that the car position is still in range (0 to 499) */
     CarState carState = this.WhereIs();
+    int currCarPosition;
 
     /* Check that the car is not parked */
     if (carState.CurrParkingStatus == ParkingStatus.PARKED) {
@@ -89,16 +88,28 @@ public class AutonomousParking implements AutonomousParkingInterface {
     int distanceToClosestObject = this.IsEmpty();
     if (distanceToClosestObject >= MIN_SENSOR_DETECTED_FREE_SPOT) {
       freeSpotsLength += 1;
-    } else {
-      /* Registering the current non-blocking parking spot */
-      currNonBlockingParkingCarStatus = new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
+    } else { /* Encounter blocking point on the right hand side */
+      /* Check and register the most Efficient parking spot */
+      if (freeSpotsLength >= PARKING_SPOT_LENGTH)
+      {
+        currCarPosition = this.actuator.GetPosition();
+        if ((currMostEfficientFreeSpot.freeSpotsLength == 0) || 
+            (currMostEfficientFreeSpot.freeSpotsLength > freeSpotsLength))
+        {
+          /* Registering the current most efficient parking spot */
+          currMostEfficientFreeSpot = new FreeSpots(currCarPosition, freeSpotsLength);;
+        }
+      }
       /* Resetting the freeSpotsLength due to obstruction */
       freeSpotsLength = 0;
     }
 
-    /* Update the currNonBlockingParkingCarStatus for several last freeSpotsLength before reaching the end of road */
-    if (this.actuator.GetPosition() == ROAD_MAX_STRETCH && freeSpotsLength >= PARKING_SPOT_LENGTH) {
-      currNonBlockingParkingCarStatus = new FreeSpots(currCarStatus.position, freeSpotsLength);
+    /* Update for several last freeSpotsLength before reaching the end of road without encountering any obstruction */
+    if ((this.actuator.GetPosition() == ROAD_MAX_STRETCH) && 
+        (freeSpotsLength >= PARKING_SPOT_LENGTH) &&
+        (freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength)) {
+        currCarPosition = this.actuator.GetPosition(); // Update current position
+        currMostEfficientFreeSpot = new FreeSpots(currCarPosition, freeSpotsLength); // Update currMostEfficientFreeSpot
     }
 
     return new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
@@ -338,47 +349,34 @@ public class AutonomousParking implements AutonomousParkingInterface {
    * - (Refer to the Test_Specification.xlsm for more details)
    */
   public boolean Park() {
-    /* Update the current car position on the road */
-    currCarStatus = new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
-    /*Keep moving forward reaching a upper road limit */
-    while (currCarStatus.position < ROAD_MAX_STRETCH)
+    /* Keep moving forward reaching a upper road limit */
+    while (this.actuator.GetPosition() < ROAD_MAX_STRETCH)
     {
-      currCarStatus = MoveForward(); // move 1m ahead and update car status
-
-      /* At the starting point, update the very first Most Efficient Free Spot */
-      /* Keep scanning and registering the most Efficient parking spot */
-      if (currNonBlockingParkingCarStatus.freeSpotsLength >= PARKING_SPOT_LENGTH)
-      {
-        if ((currMostEfficientFreeSpot.freeSpotsLength == 0) || (currNonBlockingParkingCarStatus.freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength))
-        {
-          currMostEfficientFreeSpot = currNonBlockingParkingCarStatus;
-        }
-      }
-
-      // Could not find any valid parking spot till the end of the road -> Raise exception and stop the program
-      if ((currCarStatus.position == ROAD_MAX_STRETCH) && (currMostEfficientFreeSpot.freeSpotsLength < PARKING_SPOT_LENGTH))
-      {
-        throw new IllegalStateException("Could not find any valid parking spot till then of the road");
-      }
+      this.MoveForward(); // move 1m ahead and update car status
     }
 
-    /*Keep moving backward until parking or reaching a lower road limit */
-    while ((currCarStatus.position > ROAD_MIN_STRETCH) && (currParkingStatus == ParkingStatus.UNPARKED))
+    /* Could not find any valid parking spot till the end of the road */ 
+    if (currMostEfficientFreeSpot.freeSpotsLength == 0)
     {
-      currCarStatus = MoveBackward();
-      if (currMostEfficientFreeSpot.position == currCarStatus.position)
-      {
-        /* Park successfully */
-        currParkingStatus = ParkingStatus.PARKED;
-        /* Reset free spots length if car is parked successfully */
-        freeSpotsLength = 0;
-        /* Return  */
-        return true;
-      }
+      /* Return Park unsuccessfully */
+      currParkingStatus = ParkingStatus.UNPARKED;
+      return false;
     }
-    /* Otherwise Return false */
-    currParkingStatus = ParkingStatus.UNPARKED;
-    return false;
+
+    /* Keep moving backward until parking or reaching a lower road limit */
+    while (currMostEfficientFreeSpot.position != this.actuator.GetPosition())
+    {
+      this.MoveBackward();  // move 1m backward and update car status
+    }
+
+    /* Park successfully */
+    currParkingStatus = ParkingStatus.PARKED;
+    /* Reset free spots length if car is parked successfully */
+    freeSpotsLength = 0;
+     /* Reset current most efficient free spot */
+    currMostEfficientFreeSpot = new FreeSpots(0, 0);
+    /* Return  */
+    return true;
   }
 
   /**
