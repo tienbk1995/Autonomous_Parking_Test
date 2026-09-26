@@ -74,12 +74,14 @@ public class AutonomousParking implements AutonomousParkingInterface {
   public FreeSpots MoveForward() {
     /* Check that the car position is still in range (0 to 499) */
     CarState carState = this.WhereIs();
-    int currCarPosition;
+    int prevCarPosition;
 
     /* Check that the car is not parked */
     if (carState.CurrParkingStatus == ParkingStatus.PARKED) {
       throw new IllegalStateException("Car is already parked");
     }
+    /* Update prev car position */
+    prevCarPosition = this.actuator.GetPosition();
 
     /* Increment car position */
     this.actuator.UpOneStep();
@@ -92,12 +94,11 @@ public class AutonomousParking implements AutonomousParkingInterface {
       /* Check and register the most Efficient parking spot */
       if (freeSpotsLength >= PARKING_SPOT_LENGTH)
       {
-        currCarPosition = this.actuator.GetPosition();
         if ((currMostEfficientFreeSpot.freeSpotsLength == 0) || 
             (currMostEfficientFreeSpot.freeSpotsLength > freeSpotsLength))
         {
           /* Registering the current most efficient parking spot */
-          currMostEfficientFreeSpot = new FreeSpots(currCarPosition, freeSpotsLength);;
+          currMostEfficientFreeSpot = new FreeSpots(prevCarPosition, freeSpotsLength);
         }
       }
       /* Resetting the freeSpotsLength due to obstruction */
@@ -107,9 +108,10 @@ public class AutonomousParking implements AutonomousParkingInterface {
     /* Update for several last freeSpotsLength before reaching the end of road without encountering any obstruction */
     if ((this.actuator.GetPosition() == ROAD_MAX_STRETCH) && 
         (freeSpotsLength >= PARKING_SPOT_LENGTH) &&
-        (freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength)) {
-        currCarPosition = this.actuator.GetPosition(); // Update current position
-        currMostEfficientFreeSpot = new FreeSpots(currCarPosition, freeSpotsLength); // Update currMostEfficientFreeSpot
+        ((freeSpotsLength < currMostEfficientFreeSpot.freeSpotsLength) ||
+        (currMostEfficientFreeSpot.freeSpotsLength == 0))) {
+          
+        currMostEfficientFreeSpot = new FreeSpots(this.actuator.GetPosition(), freeSpotsLength); // Update currMostEfficientFreeSpot
     }
 
     return new FreeSpots(this.actuator.GetPosition(), freeSpotsLength);
