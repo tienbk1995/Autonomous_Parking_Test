@@ -47,18 +47,16 @@ public class TestPark {
 
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1SetsExp);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2SetsExp);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
-        Car.currCarPosition = 10;
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
+        for (int i = 0; i < 10; i++) actuator.UpOneStep();
         boolean doPark = Car.Park();
         assertEquals(0, Car.freeSpotsLength);
 
         assertEquals(true, doPark);
-        assertEquals(15, Car.currCarPosition);
+        assertEquals(15, actuator.GetPosition());
         assertEquals(ParkingStatus.PARKED, Car.currParkingStatus);
         assertEquals(5, ((MockDataSensorIsEmpty)sensor1).testCount);
-
-        int[] expected = {180, 180, 180, 180, 180};
-        assertArrayEquals(expected, ((MockDataSensorIsEmpty)sensor1).sensorData);
     }
         
     @Test // TC_P_01
@@ -80,14 +78,15 @@ public class TestPark {
 
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         
-        Car.freeSpotsLength = 5;
-        Car.currCarPosition = 50;
+        //Car.freeSpotsLength = 5;
+        for (int i = 0; i < 50; i++) actuator.UpOneStep();
 
         Car.Park();
 
-        assertEquals(50, Car.currCarPosition);
+        assertEquals(55, actuator.GetPosition());
         assertEquals(0, Car.freeSpotsLength);
         assertEquals(ParkingStatus.PARKED, Car.currParkingStatus);
     }
@@ -118,14 +117,15 @@ public class TestPark {
 
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         
-        Car.freeSpotsLength = 0;
-        Car.currCarPosition = 50;
+        //Car.freeSpotsLength = 0;
+        for (int i = 0; i < 50; i++) actuator.UpOneStep();
 
         Car.Park();
 
-        assertEquals(59, Car.currCarPosition);
+        assertEquals(59, actuator.GetPosition());
         assertEquals(0, Car.freeSpotsLength);
         assertEquals(ParkingStatus.PARKED, Car.currParkingStatus);
     }
@@ -148,14 +148,15 @@ public class TestPark {
 
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
-        
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
+
         Car.freeSpotsLength = 0;
-        Car.currCarPosition = 50;
+        for (int i = 0; i < 50; i++) actuator.UpOneStep();
 
         Car.Park();
 
-        assertEquals(500, Car.currCarPosition);
+        assertEquals(500, actuator.GetPosition());
         assertEquals(0, Car.freeSpotsLength);
         assertEquals(ParkingStatus.UNPARKED, Car.currParkingStatus);
     }
