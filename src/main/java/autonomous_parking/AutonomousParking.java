@@ -81,8 +81,6 @@ public class AutonomousParking implements AutonomousParkingInterface {
     if (carState.CurrParkingStatus == ParkingStatus.PARKED) {
       throw new IllegalStateException("Car is already parked");
     }
-    /* Update prev car position */
-    prevCarPosition = this.actuator.GetPosition();
 
     /* Increment car position */
     this.actuator.UpOneStep();
