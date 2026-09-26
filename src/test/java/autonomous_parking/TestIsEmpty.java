@@ -37,7 +37,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(30, filteredSensorData);
@@ -53,7 +54,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(102, filteredSensorData);
@@ -69,7 +71,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(146, filteredSensorData);
@@ -86,7 +89,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(-1, filteredSensorData);
@@ -102,7 +106,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(0, filteredSensorData);
@@ -118,7 +123,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(200, filteredSensorData);
@@ -134,7 +140,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(-1, filteredSensorData);
@@ -150,7 +157,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(-1, filteredSensorData);
@@ -167,7 +175,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(105, filteredSensorData);
@@ -183,7 +192,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(105, filteredSensorData);
@@ -199,7 +209,8 @@ public class TestIsEmpty {
                             };
         IDataSensor sensor1 = new MockDataSensorIsEmpty(sensorData1Sets);
         IDataSensor sensor2 = new MockDataSensorIsEmpty(sensorData2Sets);
-        AutonomousParking Car = new AutonomousParking(sensor1, sensor2);
+        IActuator actuator = new Actuator();
+        AutonomousParking Car = new AutonomousParking(sensor1, sensor2, actuator);
         int filteredSensorData = Car.IsEmpty();
 
         assertEquals(-1, filteredSensorData);
