@@ -101,7 +101,7 @@ public class TestIsEmpty {
         assertEquals(-1, filteredSensorData);
 
     }
-    @Test // TC_IE_05
+    @Test // TC_IE_06
     void TestNormalBDBothSensorData1() {
         int[][] sensorData1Sets = {
                             {0, 1, 0, 1, 0},                    
@@ -118,7 +118,7 @@ public class TestIsEmpty {
         assertEquals(0, filteredSensorData);
 
     }
-    @Test // TC_IE_06
+    @Test // TC_IE_07
     void TestNormalBDBothSensorData2() {
         int[][] sensorData1Sets = {
                             {200, 200, 200, 200, 200},                    
@@ -135,7 +135,7 @@ public class TestIsEmpty {
         assertEquals(200, filteredSensorData);
 
     }
-    @Test // TC_IE_07
+    @Test // TC_IE_05
     void TestAbnormalBDBothSensorData1() {
         int[][] sensorData1Sets = {
                             {-1, -2, -3, -1, 0},                    
