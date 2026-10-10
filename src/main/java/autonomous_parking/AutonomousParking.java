@@ -206,9 +206,9 @@ public class AutonomousParking implements AutonomousParkingInterface {
    * | c1: S1 average value                       |    < 80  |    80    |    > 80  |
    * | c2: S2 average value                       |    < 80  |    80    |    > 80  |
    * |--------------------------------------------|----------|----------|----------|
-   * | a3: Sensor state                           |  Invalid |  Valid   |  Invalid |
-   * | a1: IsEmpty() = -1                         |    X     |    -     |    X     |
-   * | a2: IsEmpty() = Min(avg(S1), avg(S2))      |    -     |    X     |    -     |
+   * | a3: Sensor state                           |  Valid   |  Valid   |  Invalid |
+   * | a1: IsEmpty() = -1                         |    -     |    -     |    X     |
+   * | a2: IsEmpty() = Min(avg(S1), avg(S2))      |    X     |    X     |    -     |
    * |--------------------------------------------|----------|----------|----------|
    * - (Refer to the Test_Specification.xlsm OR the report for more details)
    */

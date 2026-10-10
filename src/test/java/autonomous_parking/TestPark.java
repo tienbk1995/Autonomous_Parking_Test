@@ -62,7 +62,7 @@ public class TestPark {
     @Test // TC_P_02
     void TestCarFoundMultipleValidPosition() {
         int[][] sensorData1Sets = {
-                            {180, 180, 180, 180, 180},
+                            {180, 180, 180, 180, 180}, //1
                             {180, 180, 180, 180, 180},
                             {180, 180, 180, 180, 180},
                             {180, 180, 180, 180, 180},

@@ -49,7 +49,8 @@ class TestScenario_2 {
                 int i = index.getAndIncrement();
 
                 if (i < sequence.length) {
-                    return currentData[0] = sequence[i];
+                    currentData[0] = sequence[i];
+                    sensor.Read(currentData[0]);
                 }
 
                 return invocation.callRealMethod();
